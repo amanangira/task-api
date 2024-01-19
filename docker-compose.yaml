@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  postgresql:
+    hostname: postgresql
+    image: postgres:14.1
+    restart: always
+    ports:
+      - ${POSTGRESQL_PORT}:${POSTGRESQL_CONTAINER_INTERNAL_PORT}
+    environment:
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DB}
+    volumes:
+      - ${POSTGRES_MOUNT_PATH}:/var/lib/postgresql/data
