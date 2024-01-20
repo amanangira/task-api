@@ -1,7 +1,7 @@
 migrate:
 	dbmate migrate
 
-migrate-down:
+down:
 	dbmate down
 
 run:
