@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -18,11 +19,14 @@ func WriteJSON(w http.ResponseWriter, httpCode int, data interface{}) {
 	w.WriteHeader(httpCode)
 	var encodeErr error
 	if data != nil {
-		encodeErr = json.NewEncoder(w).Encode(data)
-		panic(encodeErr)
+		if encodeErr = json.NewEncoder(w).Encode(data); encodeErr != nil {
+			panic(encodeErr)
+		}
 	}
 }
 
+// BadRequest - helper for creating 400 response
+// TODO - absorb app_error and simplify implementation
 func BadRequest(w http.ResponseWriter, message string) {
 	bodyBytes, err := json.Marshal(ErrorResponse{
 		ErrorMessage: message,
@@ -34,7 +38,7 @@ func BadRequest(w http.ResponseWriter, message string) {
 
 	w.WriteHeader(http.StatusBadRequest)
 	if _, err2 := w.Write(bodyBytes); err2 != nil {
-		panic(err2)
+		log.Println(err2)
 	}
 
 	return
