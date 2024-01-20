@@ -7,7 +7,7 @@ import (
 )
 
 type ITaskService interface {
-	Create(ctx context.Context, input *models.Task) error
+	Create(ctx context.Context, input models.Task) (string, error)
 }
 
 type TaskService struct {
@@ -22,6 +22,8 @@ func NewTaskService(userRepository repository.ITaskRepository) ITaskService {
 	}
 }
 
-func (u TaskService) Create(ctx context.Context, input *models.Task) error {
-	return u.taskRepository.Create(ctx, input)
+func (u TaskService) Create(ctx context.Context, input models.Task) (string, error) {
+	err := u.taskRepository.Create(ctx, &input)
+
+	return input.ID, err
 }

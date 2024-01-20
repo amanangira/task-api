@@ -26,14 +26,12 @@ func (u TaskRepository) Create(ctx context.Context, task *models.Task) error {
 	row := u.dbClient.QueryRowxContext(
 		ctx,
 		`INSERT INTO 
-    				tasks (title, description, priority, created_at, updated_at, due_at)
-    				values ($1, $2, $3, $4, $5, $6)
+    				tasks (title, description, priority, due_at)
+    				values ($1, $2, $3, $4)
 				returning id;`,
 		task.Title,
 		task.Description,
 		task.Priority,
-		task.CreatedAt,
-		task.UpdatedAt,
 		task.DueAt,
 	)
 
