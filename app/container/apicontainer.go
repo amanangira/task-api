@@ -8,7 +8,7 @@ import (
 )
 
 type API struct {
-	TaskController *controller.TaskController
+	TaskController controller.ITaskController
 }
 
 var APIContainer API
