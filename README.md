@@ -30,3 +30,25 @@ A sample environment variable file is part of the repository `.env.example`. You
     PostgreSQL service with the desired connection details. 
 3. DBMate variables - we are using a library for managing our DB migrations called [DBMate](https://github.com/amacneil/dbmate). You can check about 
     its environments variables on the library page.  
+
+### APIs
+#### Endpoints
+- POST /api/task has 
+- GET /api/task has 
+- PATCH /api/task/{taskID} has 
+- DELETE /api/task/{taskID} has 
+- GET /api/task/{taskID} has 
+- GET /health has 
+
+#### Sample Body 
+```json
+{
+    "id": "",
+    "title" : "sample",
+    "description" : "new description",
+    "priority" : "p0",
+    "created_at" : "2001-03-24T16:21:21.269Z",
+    "updated_at": "2001-03-24T16:21:21.269Z",
+    "due_at": "2001-03-24T16:21:21.269Z"
+}
+```
