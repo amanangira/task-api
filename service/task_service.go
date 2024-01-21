@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"task/persistence/models"
 	"task/repository"
 )
@@ -12,6 +11,7 @@ type ITaskService interface {
 	GetTask(taskID string) (models.Task, error)
 	UpdateTask(taskID string, task models.Task) error
 	DeleteTask(taskID string) error
+	ListTasks(ctx context.Context) ([]models.Task, error)
 }
 
 type TaskService struct {
@@ -26,20 +26,24 @@ func NewTaskService(userRepository repository.ITaskRepository) ITaskService {
 	}
 }
 
-func (u TaskService) Create(ctx context.Context, input models.Task) (string, error) {
-	err := u.taskRepository.Create(ctx, &input)
+func (t TaskService) Create(ctx context.Context, input models.Task) (string, error) {
+	err := t.taskRepository.Create(ctx, &input)
 
 	return input.ID, err
 }
 
-func (s TaskService) GetTask(taskID string) (models.Task, error) {
-	return s.taskRepository.GetTask(taskID)
+func (t TaskService) GetTask(taskID string) (models.Task, error) {
+	return t.taskRepository.GetTask(taskID)
 }
 
-func (s TaskService) UpdateTask(taskID string, task models.Task) error {
-	return s.taskRepository.UpdateTask(taskID, task)
+func (t TaskService) UpdateTask(taskID string, task models.Task) error {
+	return t.taskRepository.UpdateTask(taskID, task)
 }
 
-func (s TaskService) DeleteTask(taskID string) error {
-	return s.taskRepository.DeleteTask(taskID)
+func (t TaskService) DeleteTask(taskID string) error {
+	return t.taskRepository.DeleteTask(taskID)
+}
+
+func (t TaskService) ListTasks(ctx context.Context) ([]models.Task, error) {
+	return t.taskRepository.ListTasks(ctx)
 }

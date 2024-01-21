@@ -3,7 +3,6 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -24,6 +23,7 @@ type ITaskController interface {
 	GetTask(w http.ResponseWriter, r *http.Request)
 	UpdateTask(w http.ResponseWriter, r *http.Request)
 	DeleteTask(w http.ResponseWriter, r *http.Request)
+	ListTasks(w http.ResponseWriter, r *http.Request)
 }
 
 type TaskController struct {
@@ -37,7 +37,7 @@ func NewTaskController(
 	}
 }
 
-func (p TaskController) Create(w http.ResponseWriter, r *http.Request) {
+func (t TaskController) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var input models.Task
 	decodeErr := json.NewDecoder(r.Body).Decode(&input)
@@ -59,7 +59,7 @@ func (p TaskController) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := p.taskService.Create(ctx, input)
+	id, err := t.taskService.Create(ctx, input)
 	if err != nil {
 		app_error.NewError(err, http.StatusInternalServerError, "").Log().HttpError(w)
 		return
@@ -72,23 +72,22 @@ func (p TaskController) Create(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (c TaskController) GetTask(w http.ResponseWriter, r *http.Request) {
+func (t TaskController) GetTask(w http.ResponseWriter, r *http.Request) {
 	taskID := chi.URLParam(r, TaskIDRequestKey)
 
-	task, err := c.taskService.GetTask(taskID)
+	task, err := t.taskService.GetTask(taskID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
-	encodeErr := json.NewEncoder(w).Encode(task)
-	if encodeErr != nil {
-		log.Println(encodeErr)
-	}
-
+	app.WriteJSON(
+		w,
+		http.StatusOK,
+		task)
 }
 
-func (c TaskController) UpdateTask(w http.ResponseWriter, r *http.Request) {
+func (t TaskController) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	taskID := chi.URLParam(r, TaskIDRequestKey)
 
 	var task models.Task
@@ -97,25 +96,44 @@ func (c TaskController) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := c.taskService.UpdateTask(taskID, task)
+	err := t.taskService.UpdateTask(taskID, task)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	app.WriteJSON(
+		w,
+		http.StatusOK,
+		nil)
 }
 
-func (c TaskController) DeleteTask(w http.ResponseWriter, r *http.Request) {
+func (t TaskController) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	taskID := chi.URLParam(r, TaskIDRequestKey)
 
-	err := c.taskService.DeleteTask(taskID)
+	err := t.taskService.DeleteTask(taskID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	app.WriteJSON(
+		w,
+		http.StatusOK,
+		nil)
+}
+
+func (t TaskController) ListTasks(w http.ResponseWriter, r *http.Request) {
+	tasks, err := t.taskService.ListTasks(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	app.WriteJSON(
+		w,
+		http.StatusOK,
+		tasks)
 }
 
 func validateCreatePayload(input models.Task) error {
