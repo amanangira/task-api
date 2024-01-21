@@ -8,7 +8,7 @@ CREATE TABLE tasks (
     title           TEXT,
     description     TEXT,
     priority        task_priority,
-    created_at      TIMESTAMP WITH TIME ZONE,
+    created_at      TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at      TIMESTAMP WITH TIME ZONE,
     due_at          TIMESTAMP WITH TIME ZONE
 );
