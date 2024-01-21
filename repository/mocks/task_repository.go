@@ -69,6 +69,213 @@ func (_c *ITaskRepository_Create_Call) RunAndReturn(run func(context.Context, *m
 	return _c
 }
 
+// DeleteTask provides a mock function with given fields: taskID
+func (_m *ITaskRepository) DeleteTask(taskID string) error {
+	ret := _m.Called(taskID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteTask")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(taskID)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ITaskRepository_DeleteTask_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'DeleteTask'
+type ITaskRepository_DeleteTask_Call struct {
+	*mock.Call
+}
+
+// DeleteTask is a helper method to define mock.On call
+//   - taskID string
+func (_e *ITaskRepository_Expecter) DeleteTask(taskID interface{}) *ITaskRepository_DeleteTask_Call {
+	return &ITaskRepository_DeleteTask_Call{Call: _e.mock.On("DeleteTask", taskID)}
+}
+
+func (_c *ITaskRepository_DeleteTask_Call) Run(run func(taskID string)) *ITaskRepository_DeleteTask_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *ITaskRepository_DeleteTask_Call) Return(_a0 error) *ITaskRepository_DeleteTask_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ITaskRepository_DeleteTask_Call) RunAndReturn(run func(string) error) *ITaskRepository_DeleteTask_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetTask provides a mock function with given fields: taskID
+func (_m *ITaskRepository) GetTask(taskID string) (models.Task, error) {
+	ret := _m.Called(taskID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetTask")
+	}
+
+	var r0 models.Task
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (models.Task, error)); ok {
+		return rf(taskID)
+	}
+	if rf, ok := ret.Get(0).(func(string) models.Task); ok {
+		r0 = rf(taskID)
+	} else {
+		r0 = ret.Get(0).(models.Task)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(taskID)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ITaskRepository_GetTask_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTask'
+type ITaskRepository_GetTask_Call struct {
+	*mock.Call
+}
+
+// GetTask is a helper method to define mock.On call
+//   - taskID string
+func (_e *ITaskRepository_Expecter) GetTask(taskID interface{}) *ITaskRepository_GetTask_Call {
+	return &ITaskRepository_GetTask_Call{Call: _e.mock.On("GetTask", taskID)}
+}
+
+func (_c *ITaskRepository_GetTask_Call) Run(run func(taskID string)) *ITaskRepository_GetTask_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string))
+	})
+	return _c
+}
+
+func (_c *ITaskRepository_GetTask_Call) Return(_a0 models.Task, _a1 error) *ITaskRepository_GetTask_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ITaskRepository_GetTask_Call) RunAndReturn(run func(string) (models.Task, error)) *ITaskRepository_GetTask_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListTasks provides a mock function with given fields: ctx
+func (_m *ITaskRepository) ListTasks(ctx context.Context) ([]models.Task, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListTasks")
+	}
+
+	var r0 []models.Task
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]models.Task, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []models.Task); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]models.Task)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ITaskRepository_ListTasks_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListTasks'
+type ITaskRepository_ListTasks_Call struct {
+	*mock.Call
+}
+
+// ListTasks is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *ITaskRepository_Expecter) ListTasks(ctx interface{}) *ITaskRepository_ListTasks_Call {
+	return &ITaskRepository_ListTasks_Call{Call: _e.mock.On("ListTasks", ctx)}
+}
+
+func (_c *ITaskRepository_ListTasks_Call) Run(run func(ctx context.Context)) *ITaskRepository_ListTasks_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *ITaskRepository_ListTasks_Call) Return(_a0 []models.Task, _a1 error) *ITaskRepository_ListTasks_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *ITaskRepository_ListTasks_Call) RunAndReturn(run func(context.Context) ([]models.Task, error)) *ITaskRepository_ListTasks_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateTask provides a mock function with given fields: taskID, task
+func (_m *ITaskRepository) UpdateTask(taskID string, task models.Task) error {
+	ret := _m.Called(taskID, task)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateTask")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, models.Task) error); ok {
+		r0 = rf(taskID, task)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ITaskRepository_UpdateTask_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateTask'
+type ITaskRepository_UpdateTask_Call struct {
+	*mock.Call
+}
+
+// UpdateTask is a helper method to define mock.On call
+//   - taskID string
+//   - task models.Task
+func (_e *ITaskRepository_Expecter) UpdateTask(taskID interface{}, task interface{}) *ITaskRepository_UpdateTask_Call {
+	return &ITaskRepository_UpdateTask_Call{Call: _e.mock.On("UpdateTask", taskID, task)}
+}
+
+func (_c *ITaskRepository_UpdateTask_Call) Run(run func(taskID string, task models.Task)) *ITaskRepository_UpdateTask_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(string), args[1].(models.Task))
+	})
+	return _c
+}
+
+func (_c *ITaskRepository_UpdateTask_Call) Return(_a0 error) *ITaskRepository_UpdateTask_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *ITaskRepository_UpdateTask_Call) RunAndReturn(run func(string, models.Task) error) *ITaskRepository_UpdateTask_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // NewITaskRepository creates a new instance of ITaskRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewITaskRepository(t interface {
