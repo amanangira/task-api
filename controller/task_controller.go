@@ -3,18 +3,27 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
+
 	"task/app"
 	"task/app/app_error"
 	"task/persistence/models"
 	"task/service"
+
+	"github.com/go-chi/chi/v5"
 )
 
 // TODO - add validation for incoming requests
 
+const TaskIDRequestKey = "taskID"
+
 type ITaskController interface {
 	Create(w http.ResponseWriter, r *http.Request)
+	GetTask(w http.ResponseWriter, r *http.Request)
+	UpdateTask(w http.ResponseWriter, r *http.Request)
+	DeleteTask(w http.ResponseWriter, r *http.Request)
 }
 
 type TaskController struct {
@@ -61,6 +70,52 @@ func (p TaskController) Create(w http.ResponseWriter, r *http.Request) {
 	}{
 		ID: id,
 	})
+}
+
+func (c TaskController) GetTask(w http.ResponseWriter, r *http.Request) {
+	taskID := chi.URLParam(r, TaskIDRequestKey)
+
+	task, err := c.taskService.GetTask(taskID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	encodeErr := json.NewEncoder(w).Encode(task)
+	if encodeErr != nil {
+		log.Println(encodeErr)
+	}
+
+}
+
+func (c TaskController) UpdateTask(w http.ResponseWriter, r *http.Request) {
+	taskID := chi.URLParam(r, TaskIDRequestKey)
+
+	var task models.Task
+	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err := c.taskService.UpdateTask(taskID, task)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func (c TaskController) DeleteTask(w http.ResponseWriter, r *http.Request) {
+	taskID := chi.URLParam(r, TaskIDRequestKey)
+
+	err := c.taskService.DeleteTask(taskID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func validateCreatePayload(input models.Task) error {

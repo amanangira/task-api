@@ -11,4 +11,7 @@ func (a api) Init(r *chi.Mux, apiInstance app.IAPI) {
 	r.Use(middleware.ApplyBasicAuthorizer(apiInstance))
 
 	r.Post("/task", container.APIContainer.TaskController.Create)
+	r.Get("/task", container.APIContainer.TaskController.GetTask)
+	r.Put("/task", container.APIContainer.TaskController.UpdateTask)
+	r.Delete("/task", container.APIContainer.TaskController.DeleteTask)
 }
