@@ -10,8 +10,6 @@ import (
 	"task/app/app_error"
 	"task/persistence/models"
 	"task/service"
-
-	"github.com/go-chi/chi/v5"
 )
 
 // TODO - add validation for incoming requests
@@ -73,8 +71,20 @@ func (t TaskController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t TaskController) GetTask(w http.ResponseWriter, r *http.Request) {
-	taskID := chi.URLParam(r, TaskIDRequestKey)
+	var requestBody struct {
+		TaskID string `json:"taskID"`
+	}
 
+	decodeErr := json.NewDecoder(r.Body).Decode(&requestBody)
+	if decodeErr != nil || requestBody.TaskID == "" {
+		app.BadRequest(
+			w,
+			app_error.NewError(decodeErr, http.StatusBadRequest, "invalid input").Log().Error(),
+		)
+
+		return
+	}
+	taskID := requestBody.TaskID
 	task, err := t.taskService.GetTask(taskID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -88,28 +98,50 @@ func (t TaskController) GetTask(w http.ResponseWriter, r *http.Request) {
 }
 
 func (t TaskController) UpdateTask(w http.ResponseWriter, r *http.Request) {
-	taskID := chi.URLParam(r, TaskIDRequestKey)
+	var input models.Task
+	decodeErr := json.NewDecoder(r.Body).Decode(&input)
+	if decodeErr != nil {
+		app.BadRequest(
+			w,
+			app_error.NewError(decodeErr, http.StatusBadRequest, "invalid input").Log().Error(),
+		)
 
-	var task models.Task
-	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	err := t.taskService.UpdateTask(taskID, task)
+	if err := validateCreatePayload(input); err != nil {
+		app.BadRequest(
+			w,
+			err.Error(),
+		)
+
+		return
+	}
+
+	err := t.taskService.UpdateTask(input.ID, input)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		app_error.NewError(err, http.StatusInternalServerError, "").Log().HttpError(w)
 		return
 	}
 
-	app.WriteJSON(
-		w,
-		http.StatusOK,
-		nil)
+	app.WriteJSON(w, http.StatusOK, nil)
 }
 
 func (t TaskController) DeleteTask(w http.ResponseWriter, r *http.Request) {
-	taskID := chi.URLParam(r, TaskIDRequestKey)
+	var requestBody struct {
+		TaskID string `json:"taskID"`
+	}
+
+	decodeErr := json.NewDecoder(r.Body).Decode(&requestBody)
+	if decodeErr != nil || requestBody.TaskID == "" {
+		app.BadRequest(
+			w,
+			app_error.NewError(decodeErr, http.StatusBadRequest, "invalid input").Log().Error(),
+		)
+
+		return
+	}
+	taskID := requestBody.TaskID
 
 	err := t.taskService.DeleteTask(taskID)
 	if err != nil {
